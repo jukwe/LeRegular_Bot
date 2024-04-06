@@ -2,6 +2,7 @@ import telebot
 from telebot import types
 import data
 
+
 token = data.Token()
 
 BOT_TOKEN = token.get_bot_token()
@@ -29,4 +30,13 @@ def start_command(bot, message : types.Message):
     keyboard_inline = markup.add(buy_button, sell_button, auto_snipe_button, manual_snipe_button,
                                  scanner_button, help_button, settings_button, refresh_button)
 
-    bot.send_message(message.chat.id, welcome_message, reply_markup = markup, parse_mode = 'HTML')
+    msg = bot.send_message(message.chat.id, welcome_message, reply_markup = markup, parse_mode = 'HTML')
+
+    # bot.register_next_step_handler(msg, handle_callback_query)
+
+# #Handling queries
+# @bot.callback_query_handler(func=lambda call: True)
+# def handle_callback_query(call, message: types.Message):
+#     # 'call.data' contains the 'callback_data' from the inline button that was pressed
+#     if call.data == 'buy_button':
+#         main.buy_command(message)
