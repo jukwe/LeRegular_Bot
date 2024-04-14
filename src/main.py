@@ -1,17 +1,16 @@
 import telebot
 from telebot import types
 import telebot.formatting as tb_format
-import data
-import start
+import src.data as data
 import requests
-import tgFormat
-# import buy
+import src.tgFormat as tgFormat
 #imports for web3
 from solana.rpc.api import Client
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from bip_utils import Bip39SeedGenerator, Bip44, Bip44Coins, Bip44Changes
 from mnemonic import Mnemonic
+import LeRegularDb.LeRegularDb as db
 
 
 token = data.Token()
@@ -31,7 +30,14 @@ SOLANA_CLIENT = Client("https://api.devnet.solana.com") # https://api.mainnet-be
 #Commands for telegram '/command'
 @bot.message_handler(commands=['start']) # start command
 def start_command(message):
-    keypair = create_wallet()
+    db.initialize_db()
+
+    keypair = db.get_user_wallet(message.from_user.id)
+
+    if keypair is None:
+        keypair = create_wallet()
+        db.insert_user_wallet(message.from_user.id, keypair)
+    
     account_address = str(keypair.pubkey())
     copy_account_address = "Wallet Address: <code>" + account_address + "</code>" #tap to copy string format
     account_balance = get_account_balance(keypair)
@@ -220,10 +226,10 @@ def callback_handler(call):
     elif call.data == 'settings_button':
         setting_page(call.message)
 
-
-print('polling...')
-# bot.remove_webhook() # for webhook
-bot.polling() #for telegram
+if __name__ == '__main__':
+    print('polling...')
+    # bot.remove_webhook() # for webhook
+    bot.polling() #for telegram
 
 
 
