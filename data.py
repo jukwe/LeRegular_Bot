@@ -4,7 +4,7 @@ from typing import Final
 
 class Token:
     def __init__(self) -> None:
-        self.BOT_TOKEN: Final = '6614045567:AAEHC7eiDusqBbEtRNeB-dqIwCQJkS71qKc'
+        self.BOT_TOKEN: Final = ''
         self.BOT_USERNAME: Final = '@LeRegularBot'
         self.token_address: str = ''
 
